@@ -17,3 +17,9 @@ class Settings(BaseSettings):
     ALLOW_METHODS: List[str] = ["*"]
     ALLOW_HEADERS: List[str] = ["*"]
 
+    model_config = SettingsConfigDict(env_file=".env")
+
+
+settings = Settings()
+
+
