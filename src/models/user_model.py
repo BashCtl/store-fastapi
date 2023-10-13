@@ -12,3 +12,6 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     phone = Column(String, nullable=False)
     password = Column(String, nullable=False)
+
+    def __repr__(self):
+        return f"User(username={self.username}, email={self.email})"
