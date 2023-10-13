@@ -17,3 +17,8 @@ class UserResp(BaseModel):
     last_name: str
     email: EmailStr
     phone: str
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
