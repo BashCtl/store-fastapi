@@ -30,3 +30,8 @@ def update_user(id: int, body: UpdateUser,
                 current_user: User = Depends(AuthService.get_current_user),
                 db: Session = Depends(get_db)):
     return UserService.update_user_by_id(id, body, current_user, db)
+
+@users_router.delete("/users/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(id:int, current_user: User =Depends(AuthService.get_current_user),
+                db: Session = Depends(get_db)):
+    return UserService.delete_user_by_id(id, current_user, db)

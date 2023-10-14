@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Response
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from src.schemas.user_schema import NewUser, UpdateUser
@@ -39,10 +39,22 @@ class UserService:
     def update_user_by_id(cls, id: int, body: UpdateUser, current_user: User, db: Session):
         user_to_update = db.query(User).filter(User.id == id)
         if not user_to_update.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
         if id != current_user.id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                detail="Operation forbidden. You don't have permission.")
+                                detail="Operation forbidden. You don't have permissions.")
         user_to_update.update(body.model_dump(), synchronize_session=False)
         db.commit()
         return user_to_update.first()
+
+    @classmethod
+    def delete_user_by_id(cls,id:int, current_user: User, db: Session):
+        user_to_delete = db.query(User).filter(User.id==id)
+        if not user_to_delete.first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+        if id!=current_user.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                                detail="Operation forbidden. You don't have permissions.")
+        user_to_delete.delete(synchronize_session=False)
+        db.commit()
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
