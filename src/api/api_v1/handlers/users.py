@@ -20,6 +20,12 @@ def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(
     return UserService.login(request, db)
 
 
+@users_router.get("/logout")
+def user_logout(current_user: User = Depends(AuthService.get_current_user),
+                token: str = Depends(AuthService.oauth2_schema), db: Session = Depends(get_db)):
+    return UserService.user_logout(current_user, token, db)
+
+
 @users_router.get("/{id}", response_model=UserResp)
 def get_user(id: int, db: Session = Depends(get_db)):
     return UserService.get_user_by_id(id, db)
@@ -31,7 +37,9 @@ def update_user(id: int, body: UpdateUser,
                 db: Session = Depends(get_db)):
     return UserService.update_user_by_id(id, body, current_user, db)
 
-@users_router.delete("/users/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(id:int, current_user: User =Depends(AuthService.get_current_user),
+
+@users_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(id: int,
+                current_user: User = Depends(AuthService.get_current_user),
                 db: Session = Depends(get_db)):
     return UserService.delete_user_by_id(id, current_user, db)

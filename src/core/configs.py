@@ -10,8 +10,10 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     SECRET_KEY: str
+    JWT_REFRESH_SECRET: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_MINUTES: str
     API_VERSION: str
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
     ALLOW_METHODS: List[str] = ["*"]

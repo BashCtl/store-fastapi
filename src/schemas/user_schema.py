@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime
 
 
 class NewUser(BaseModel):
@@ -25,6 +26,7 @@ class UserResp(BaseModel):
     last_name: str
     email: EmailStr
     phone: str
+    created_at: datetime
 
 
 class UserLogin(BaseModel):
