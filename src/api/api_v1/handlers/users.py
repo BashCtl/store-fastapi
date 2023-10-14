@@ -1,9 +1,11 @@
 from fastapi import APIRouter, status, Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from src.schemas.user_schema import NewUser, UserResp
+from src.schemas.user_schema import NewUser, UserResp, UpdateUser
 from src.core.database import get_db
 from src.services.user_service import UserService
+from src.models.user_model import User
+from src.services.auth_service import AuthService
 
 users_router = APIRouter()
 
@@ -21,3 +23,10 @@ def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(
 @users_router.get("/{id}", response_model=UserResp)
 def get_user(id: int, db: Session = Depends(get_db)):
     return UserService.get_user_by_id(id, db)
+
+
+@users_router.put("/{id}", response_model=UserResp)
+def update_user(id: int, body: UpdateUser,
+                current_user: User = Depends(AuthService.get_current_user),
+                db: Session = Depends(get_db)):
+    return UserService.update_user_by_id(id, body, current_user, db)

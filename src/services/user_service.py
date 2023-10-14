@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from src.schemas.user_schema import NewUser
+from src.schemas.user_schema import NewUser, UpdateUser
 from src.core.security import hashing_password, verify_password
 from src.models.user_model import User
 from src.services.auth_service import AuthService
@@ -34,3 +34,15 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials.")
         access_token = AuthService.create_access_token({"id": user.id})
         return {"token_type": "bearer", "access_token": access_token}
+
+    @classmethod
+    def update_user_by_id(cls, id: int, body: UpdateUser, current_user: User, db: Session):
+        user_to_update = db.query(User).filter(User.id == id)
+        if not user_to_update.first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        if id != current_user.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                                detail="Operation forbidden. You don't have permission.")
+        user_to_update.update(body.model_dump(), synchronize_session=False)
+        db.commit()
+        return user_to_update.first()

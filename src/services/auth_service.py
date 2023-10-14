@@ -15,7 +15,7 @@ class AuthService:
     ALGORITHM = settings.ALGORITHM
     ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
-    oauth2_schema = OAuth2PasswordBearer(tokenUrl="login")
+    oauth2_schema = OAuth2PasswordBearer(tokenUrl="/users/login")
 
     @classmethod
     def create_access_token(cls, data: dict):

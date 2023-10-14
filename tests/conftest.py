@@ -14,9 +14,9 @@ from src.core.database import get_db
 from src.core.security import hashing_password
 from src.run import app
 
-SQACHEMY_DATABASE_URL = "sqlite:///test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
 
-engine = create_engine(SQACHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -64,7 +64,7 @@ def user():
 def registered_user(client, user):
     user["username"] = "registered"
     user["email"] = "register@test.com"
-    response = client.post("/user", json=user)
+    response = client.post("/users", json=user)
     assert response.status_code == 201
     new_user = response.json()
     new_user["password"] = user["password"]

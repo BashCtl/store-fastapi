@@ -10,6 +10,14 @@ class NewUser(BaseModel):
     password: str = Field(..., min_length=5, max_length=25, description="user password")
 
 
+class UpdateUser(BaseModel):
+    username: str = Field(..., min_length=2, max_length=30, description="username")
+    first_name: str = Field(..., min_length=1, max_length=30, description="user firstname")
+    last_name: str = Field(..., min_length=1, max_length=30, description="user lastname")
+    email: EmailStr = Field(..., description="user email")
+    phone: str = Field(..., description="user phone number")
+
+
 class UserResp(BaseModel):
     id: int
     username: str
