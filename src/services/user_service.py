@@ -85,3 +85,8 @@ class UserService:
         user_to_delete.delete(synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    @classmethod
+    def get_all_users(cls, db: Session):
+        users = db.query(User).all()
+        return users
