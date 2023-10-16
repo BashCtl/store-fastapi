@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from src.models import Base
 from src.models.user_model import User
+from src.models.pet_model import PetTable
 from src.models.token_model import TokenTable
 from src.core.database import get_db
 from src.core.security import hashing_password
@@ -108,3 +109,28 @@ def authorized_client(client, token):
         "Authorization": f"Bearer {token}"
     }
     return client
+
+
+# Pets fixtures
+
+@pytest.fixture
+def pet():
+    return load_data("pet.json")
+
+
+@pytest.fixture
+def db_pet(session, pet):
+    pet_to_add = PetTable(**pet)
+    session.add(pet_to_add)
+    session.commit()
+    assert session.query(PetTable).count() == 1
+    return pet_to_add
+
+
+@pytest.fixture
+def pet_list(session, db_pet):
+    pet_to_add = PetTable(**load_data("pet2.json"))
+    session.add(pet_to_add)
+    session.commit()
+    assert session.query(PetTable).count() == 2
+    return session.query(PetTable).all()
