@@ -18,6 +18,11 @@ class PetService:
         return pet
 
     @classmethod
+    def get_all_pets(cls, db: Session):
+        pets = db.query(PetTable).all()
+        return pets
+
+    @classmethod
     def get_pet_by_id(cls, id: int, db: Session):
         pet = db.query(PetTable).filter(PetTable.id == id).first()
         if pet is None:
