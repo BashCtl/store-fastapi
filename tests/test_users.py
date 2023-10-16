@@ -53,3 +53,19 @@ def test_logout_user(authorized_client, registered_user):
     assert response.status_code == 200
     response = authorized_client.delete(f"/users/{registered_user['id']}")
     assert response.status_code == 401
+
+
+def test_update_unathorized_user(client, registered_user):
+    registered_user["phone"] = "111-555-7"
+    response = client.put(f"/users/{registered_user['id']}", json=registered_user)
+    assert response.status_code == 401
+
+
+def test_unauthorized_user_deletion(client, registered_user):
+    response = client.delete(f"/users/{registered_user['id']}")
+    assert response.status_code == 401
+
+
+def test_unauthorized_user_logout(client):
+    response = client.get("/users/logout")
+    assert response.status_code == 401
