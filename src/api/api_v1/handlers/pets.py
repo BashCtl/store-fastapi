@@ -28,3 +28,8 @@ def get_pet(id: int, db: Session = Depends(get_db),
 def update_pet(id: int, body: NewPet, current_user: User = Depends(AuthService.get_current_user),
                db: Session = Depends(get_db)):
     return PetService.update_pet_by_id(id, body, db)
+
+
+@pets_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_pet(id: int, current_user: User = Depends(AuthService.get_current_user), db: Session = Depends(get_db)):
+    return PetService.delete_pet_by_id(id, db)
