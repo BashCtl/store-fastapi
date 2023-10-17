@@ -5,7 +5,7 @@ from sqlalchemy import pool
 from sqlalchemy import MetaData
 
 from alembic import context
-from src.models import user_model, token_model, pet_model
+from src.models import user_model, token_model, pet_model, order_model
 from src.core.configs import settings
 
 # this is the Alembic Config object, which provides
@@ -36,7 +36,7 @@ def combine_metadata(*args):
 
 
 target_metadata = combine_metadata(user_model.Base.metadata, token_model.Base.metadata,
-                                   pet_model.Base.metadata)
+                                   pet_model.Base.metadata, order_model.Base.metadata)
 
 
 # other values from the config, defined by the needs of env.py,
