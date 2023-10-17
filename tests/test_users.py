@@ -1,3 +1,4 @@
+import pytest
 from src.schemas import user_schema
 from src.schemas.token_schema import Token
 from jose import jwt
@@ -55,7 +56,7 @@ def test_logout_user(authorized_client, registered_user):
     assert response.status_code == 401
 
 
-def test_update_unathorized_user(client, registered_user):
+def test_update_unauthorized_user(client, registered_user):
     registered_user["phone"] = "111-555-7"
     response = client.put(f"/users/{registered_user['id']}", json=registered_user)
     assert response.status_code == 401
@@ -69,3 +70,50 @@ def test_unauthorized_user_deletion(client, registered_user):
 def test_unauthorized_user_logout(client):
     response = client.get("/users/logout")
     assert response.status_code == 401
+
+
+def test_invalid_registration(client, user):
+    user['email'] = ""
+    response = client.post("/users", json=user)
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize("email, password, status_code", [
+    ("", "qwerty1234", 422),
+    ("black@test.com", "", 422),
+    ("black", "qwerty1234", 401),
+    ("black@test.com", "pass", 401)
+])
+def test_invalid_user_login(client, registered_user, email, password, status_code):
+    response = client.post("/users/login", data={"username": email, "password": password})
+    assert response.status_code == status_code
+
+
+@pytest.mark.parametrize("id, status_code", [
+    (00, 404),
+    (-1, 404),
+    ("id", 422)
+])
+def test_get_single_user_by_invalid_id(client, id, status_code):
+    response = client.get(f"/users/{id}")
+    assert response.status_code == status_code
+
+
+@pytest.mark.parametrize("id, status_code", [
+    (00, 404),
+    (-1, 404),
+    ("id", 422)
+])
+def test_delete_user_by_invalid_id(authorized_client, id, status_code):
+    response = authorized_client.delete(f"/users/{id}")
+    assert response.status_code == status_code
+
+
+@pytest.mark.parametrize("id, status_code", [
+    (00, 404),
+    (-1, 404),
+    ("id", 422)
+])
+def test_update_user_by_invalid_id(authorized_client, id, status_code, registered_user):
+    response = authorized_client.put(f"/users/{id}", json=registered_user)
+    assert response.status_code == status_code
