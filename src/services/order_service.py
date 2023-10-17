@@ -40,7 +40,11 @@ class OrderService:
 
     @classmethod
     def delete_order_by_id(cls, id: int, current_user: User, db: Session):
-        order = OrderService.get_order_by_id(id, current_user, db)
-        db.delete(order)
+        order_query = db.query(Order).filter(Order.id == id)
+        if order_query.first() is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found.")
+        if order_query.first().user_id != current_user.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Forbidden.")
+        order_query.delete(synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)

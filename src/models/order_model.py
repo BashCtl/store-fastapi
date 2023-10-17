@@ -20,7 +20,7 @@ class Order(Base):
 class OrderItem(Base):
     __tablename__ = "order_items"
     id = Column(Integer, primary_key=True, nullable=False)
-    order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
+    order_id = Column(Integer, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False)
     pet_id = Column(Integer, ForeignKey("pets.id"), nullable=False)
     pet = relationship("PetTable")
 

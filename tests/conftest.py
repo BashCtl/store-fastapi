@@ -10,12 +10,16 @@ from sqlalchemy.orm import sessionmaker
 
 from src.models import Base
 from src.models.user_model import User
+from src.models.order_model import Order
 from src.models.pet_model import PetTable
 from src.models.token_model import TokenTable
 from src.core.database import get_db
 from src.core.security import hashing_password
 from src.run import app
 from src.services.auth_service import AuthService
+from src.services.order_service import OrderService
+from src.schemas import order_schema
+from src.schemas import user_schema
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
 
@@ -134,3 +138,18 @@ def pet_list(session, db_pet):
     session.commit()
     assert session.query(PetTable).count() == 2
     return session.query(PetTable).all()
+
+
+@pytest.fixture
+def order_data(pet_list, registered_user):
+    order = load_data("order.json")
+    return order
+
+
+@pytest.fixture
+def placed_order(session, order_data, registered_user):
+    body = order_schema.OrderIn(**order_data)
+    current_user = User(**registered_user)
+    order = OrderService.place_order(body, current_user, session)
+    assert session.query(Order).count() == 1
+    return order
