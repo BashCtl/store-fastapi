@@ -3,12 +3,11 @@ import os
 import pathlib
 
 import pytest
-from faker import Faker
-from faker.providers import person
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from src.core.configs import settings
 from src.core.database import get_db
 from src.models import Base
 from src.models.order_model import Order
@@ -19,7 +18,6 @@ from src.run import app
 from src.schemas import order_schema
 from src.services.auth_service import AuthService
 from src.services.order_service import OrderService
-from src.core.configs import settings
 
 SQLALCHEMY_DATABASE_URL = (f"postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASS}"
                            f"@{settings.DB_URI}:{settings.DB_PORT}/{settings.DB_NAME}_test")
@@ -28,8 +26,6 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-fake = Faker()
-fake.add_provider(person)
 
 
 @pytest.fixture
