@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
     DB_URI: str
     DB_NAME: str
-    TEST_DB_NAME: str
     DB_PORT: str
     DB_USER: str
     DB_PASS: str

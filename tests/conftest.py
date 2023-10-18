@@ -22,7 +22,7 @@ from src.services.order_service import OrderService
 from src.core.configs import settings
 
 SQLALCHEMY_DATABASE_URL = (f"postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASS}"
-                           f"@{settings.DB_URI}:{settings.DB_PORT}/{settings.TEST_DB_NAME}")
+                           f"@{settings.DB_URI}:{settings.DB_PORT}/{settings.DB_NAME}_test")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
