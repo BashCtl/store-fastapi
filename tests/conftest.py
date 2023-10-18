@@ -1,6 +1,7 @@
 import json
-import pathlib
 import os
+import pathlib
+
 import pytest
 from faker import Faker
 from faker.providers import person
@@ -8,18 +9,16 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from src.core.database import get_db
 from src.models import Base
-from src.models.user_model import User
 from src.models.order_model import Order
 from src.models.pet_model import PetTable
 from src.models.token_model import TokenTable
-from src.core.database import get_db
-from src.core.security import hashing_password
+from src.models.user_model import User
 from src.run import app
+from src.schemas import order_schema
 from src.services.auth_service import AuthService
 from src.services.order_service import OrderService
-from src.schemas import order_schema
-from src.schemas import user_schema
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
 
