@@ -1,0 +1,39 @@
+name: Test Build
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    environment:
+      name: pet-store
+    env:
+      PROJECT_NAME: ${{secrets.PROJECT_NAME}}
+      DB_URI: ${{secrets.DB_URI}}
+      DB_NAME: ${{secrets.DB_NAME}}
+      DB_PORT: ${{secrets.DB_PORT}}
+      DB_USER: ${{secrets.DB_USER}}
+      DB_PASS: ${{secrets.DB_PASS}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
+      ALGORITHM: ${{secrets.ALGORITHM}}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+      REFRESH_TOKEN_EXPIRE_MINUTES: ${{secrets.REFRESH_TOKEN_EXPIRE_MINUTES}}
+      API_VERSION: ${{secrets.API_VERSION}}
+      BACKEND_CORS_ORIGINS: ${{secrets.BACKEND_CORS_ORIGINS}}
+      ALLOW_METHODS: ${{secrets.ALLOW_METHODS}}
+      ALLOW_HEADERS: ${{secrets.ALLOW_HEADERS}}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pulling git repo
+        uses: actions/checkout@v2
+      - name: Install python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+      - name: Update pip
+        run: python -m pip install --upgrade pip
+      - name: Install all dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests with pytest
+        run: pytest -s -v -p no:warnings
