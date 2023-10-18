@@ -19,8 +19,10 @@ from src.run import app
 from src.schemas import order_schema
 from src.services.auth_service import AuthService
 from src.services.order_service import OrderService
+from src.core.configs import settings
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///test.db"
+SQLALCHEMY_DATABASE_URL = (f"postgresql+psycopg://{settings.DB_USER}:{settings.DB_PASS}"
+                           f"@{settings.DB_URI}:{settings.DB_PORT}/{settings.TEST_DB_NAME}")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
