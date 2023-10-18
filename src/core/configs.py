@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -19,7 +21,8 @@ class Settings(BaseSettings):
     ALLOW_METHODS: List[str] = ["*"]
     ALLOW_HEADERS: List[str] = ["*"]
 
-    model_config = SettingsConfigDict(env_file=".env")
+    class ConfigDict:
+        env_file = ".env"
 
 
 settings = Settings()
